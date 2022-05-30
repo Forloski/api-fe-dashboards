@@ -1,0 +1,9 @@
+### Create User
+
+POST http://localhost:3002/authentication/login
+content-type: application/json
+  
+  {
+    "username": "jane doe 3",
+    "password": "12345678"
+  }

@@ -1,0 +1,27 @@
+### Find One User
+
+GET http://localhost:3002/users/fd473b5c-dfa0-11ec-9c6f-eff6fa2d28cf 
+
+### Find All Users
+
+GET http://localhost:3002/users/
+
+### Create User
+
+POST http://localhost:3002/users/
+content-type: application/json
+  
+  {
+    "username": "jane doe 3",
+    "password": "12345678"
+  }
+
+### Update User
+
+PATCH http://localhost:3002/users/edbc7c46e01911ecafb42bc0a7b19f76
+content-type: application/json
+  
+  {
+    "username": "john doe updated",
+    "password": "12345678"
+  }

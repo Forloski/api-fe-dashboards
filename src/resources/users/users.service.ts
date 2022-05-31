@@ -22,12 +22,13 @@ export class UsersService {
     return this.usersRepository.findAll();
   }
 
-  async findOne(userId: string): Promise<Partial<User>> {
+  async findOne(userId: string): Promise<User> {
     return this.usersRepository.findOne(userId);
   }
 
   async findOneByUsername(username: string): Promise<Partial<User>> {
-    return this.usersRepository.findOneByUsername(username);
+    const teste = await this.usersRepository.findOneByUsername(username);
+    return teste;
   }
 
   async update(userId: string, updateUserDto: UpdateUserDto): Promise<Partial<User>> {

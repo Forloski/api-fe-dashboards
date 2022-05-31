@@ -7,3 +7,12 @@ content-type: application/json
     "username": "jane doe 3",
     "password": "12345678"
   }
+
+### Refresh Tokens
+
+POST  http://localhost:3002/authentication/refreshTokens
+content-type: application/json
+  
+  {
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmUgZG9lIDMiLCJzdWIiOiJhYWYwZDBiMmUwNTMxMWVjYWZkMmFiZWMwMWNmYTgzYSIsImp3dGlkIjoiYTU3ZGZlNTZlMTA4MTFlYzhmYzcwZjdhZmI5NjEzM2MiLCJ1c2VyQWdlbnQiOiJ2c2NvZGUtcmVzdGNsaWVudCIsImlwQWRkcmVzcyI6Ijo6ZmZmZjoxMjcuMC4wLjEiLCJpYXQiOjE2NTQwMTg3NzksImV4cCI6MTY1NDYyMzU3OX0.V7srEyWT3jgJjlsEIuL3b-fQ7owjmEYiW1VDXQM3UuI"
+  }

@@ -3,64 +3,60 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
-import qb from '../../../dbschema/edgeql-js';
+import qb from 'dbschema/edgeql-js';
 
 @Injectable()
 export class UsersRepository {
   constructor(private readonly db: DBService) {}
 
+  private userAttrsWithoutPassword = { ...qb.User['*'], password: false };
+
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = await qb.insert(qb.User, { ...createUserDto }).run(this.db.client);
-    return { ...createUserDto, ...user };
+    const insertUser = qb.insert(qb.User, { ...createUserDto });
+    const selectUser = qb.select(insertUser, () => ({
+      ...this.userAttrsWithoutPassword,
+    }));
+
+    return selectUser.run(this.db.client);
   }
 
   async findAll(): Promise<Partial<User>[]> {
-    const users = await qb
-      .select(qb.User, () => ({
-        id: true,
-        username: true,
-      }))
-      .run(this.db.client);
+    const findAllUsers = qb.select(qb.User, () => ({
+      ...this.userAttrsWithoutPassword,
+    }));
 
-    return users;
+    return findAllUsers.run(this.db.client);
   }
 
-  async findOne(userId: string): Promise<Partial<User>> {
-    const user = await qb
-      .select(qb.User, (u) => ({
-        id: true,
-        username: true,
-        filter: qb.op(u.id, '=', qb.uuid(userId)),
-      }))
-      .run(this.db.client);
-
-    return user;
+  async findOne(userId: string): Promise<User> {
+    const findOneUser = qb.select(qb.User, (u) => ({
+      ...this.userAttrsWithoutPassword,
+      filter: qb.op(u.id, '=', qb.uuid(userId)),
+    }));
+    return findOneUser.run(this.db.client);
   }
 
   async findOneByUsername(username: string): Promise<Partial<User>> {
-    const user = await qb
-      .select(qb.User, (u) => ({
-        id: true,
-        password: true,
-        username: true,
-        filter: qb.op(u.username, '=', username),
-      }))
-      .run(this.db.client);
+    const findOneUserByUsername = qb.select(qb.User, (u) => ({
+      ...qb.User['*'],
+      filter: qb.op(u.username, '=', username),
+    }));
 
-    return user;
+    return findOneUserByUsername.run(this.db.client);
   }
 
   async update(userId: string, updateUserDto: UpdateUserDto): Promise<Partial<User>> {
-    const user = await qb
-      .update(qb.User, (u) => ({
-        filter: qb.op(u.id, '=', qb.uuid(userId)),
-        set: {
-          ...updateUserDto,
-        },
-      }))
-      .run(this.db.client);
+    const updateUser = qb.update(qb.User, (u) => ({
+      filter: qb.op(u.id, '=', qb.uuid(userId)),
+      set: {
+        ...updateUserDto,
+      },
+    }));
+    const selectUser = qb.select(updateUser, () => ({
+      ...this.userAttrsWithoutPassword,
+    }));
 
-    return { ...updateUserDto, ...user };
+    return selectUser.run(this.db.client);
   }
 
   async remove(userId: string): Promise<void> {

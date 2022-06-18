@@ -7,18 +7,13 @@ import { RefreshToken } from './entities/refresh-token.entity';
 export class RefreshTokensRepository {
   constructor(private readonly db: DBService) {}
 
-  async create(
-    userId: string,
-    userAgent: string,
-    ipAddress: string,
-  ): Promise<Partial<RefreshToken>> {
+  async create(userId: string, ipAddress: string): Promise<Partial<RefreshToken>> {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
 
     const insertToken = qb.insert(qb.RefreshToken, {
       expiresAt,
       ipAddress,
-      userAgent,
       user: qb.select(qb.User, (u) => ({ filter: qb.op(u.id, '=', qb.uuid(userId)) })),
     });
 

@@ -1,7 +1,7 @@
 import { DBService } from 'src/providers/database/database.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import qb from 'dbschema/edgeql-js';
 
@@ -42,7 +42,9 @@ export class UsersRepository {
       filter: qb.op(u.username, '=', username),
     }));
 
-    return findOneUserByUsername.run(this.db.client);
+    const user = await findOneUserByUsername.run(this.db.client);
+
+    return user;
   }
 
   async update(userId: string, updateUserDto: UpdateUserDto): Promise<Partial<User>> {

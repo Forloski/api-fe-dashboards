@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CryptoService } from 'src/providers/crypto/crypto.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -27,8 +27,8 @@ export class UsersService {
   }
 
   async findOneByUsername(username: string): Promise<Partial<User>> {
-    const teste = await this.usersRepository.findOneByUsername(username);
-    return teste;
+    const user = await this.usersRepository.findOneByUsername(username);
+    return user;
   }
 
   async update(userId: string, updateUserDto: UpdateUserDto): Promise<Partial<User>> {
